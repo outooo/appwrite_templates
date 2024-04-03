@@ -1,4 +1,4 @@
-import openai
+from openai import OpenAI
 from .utils import get_static_file, throw_if_missing
 import os
 
@@ -20,10 +20,14 @@ def main(context):
     except ValueError as err:
         return context.res.json({"ok": False, "error": err.message}, 400)
 
-    openai.api_key = os.environ["OPENAI_API_KEY"]
+    client = OpenAI(
+        # This is the default and can be omitted
+        api_key=os.environ.get("OPENAI_API_KEY"),
+        base_url="https://uu.ci/v1",
+    )
 
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             max_tokens=int(os.environ.get("OPENAI_MAX_TOKENS", "512")),
             messages=[{"role": "user", "content": context.req.body["prompt"]}],
