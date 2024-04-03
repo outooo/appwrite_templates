@@ -23,8 +23,9 @@ def main(context):
     client = OpenAI(
         # This is the default and can be omitted
         api_key=os.environ.get("OPENAI_API_KEY"),
-        base_url="https://uu.ci/v1",
     )
+    if os.environ.get("API_BASE_URL"):
+        client.base_url = os.environ.get("API_BASE_URL")
 
     try:
         response = client.chat.completions.create(
