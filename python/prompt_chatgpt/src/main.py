@@ -1,6 +1,6 @@
+import os
 from openai import OpenAI
 from .utils import get_static_file, throw_if_missing
-import os
 
 
 def main(context):
@@ -35,5 +35,5 @@ def main(context):
         completion = response.choices[0].message.content
         return context.res.json({"ok": True, "completion": completion}, 200)
 
-    except Exception:
-        return context.res.json({"ok": False, "error": "Failed to query model."}, 500)
+    except Exception as err:
+        return context.res.json({"ok": False, "error": err.message}, 500)
