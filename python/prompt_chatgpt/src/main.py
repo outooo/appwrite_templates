@@ -24,6 +24,7 @@ def main(context):
         "model": os.environ.get('MODEL', "gpt-3.5-turbo"),
         "max_tokens": int(os.environ.get("OPENAI_MAX_TOKENS", "512")),
         "messages": [{"role": "user", "content": context.req.body["prompt"]}],
+        "stream": False,
     }
 
     api_base_url = os.environ.get("API_BASE_URL", "https://api.openai.com")
@@ -36,4 +37,4 @@ def main(context):
     except requests.exceptions.RequestException as err:
         return context.res.json({"ok": False, "error": str(err)}, 500)
     except Exception as err:
-        return context.res.json({"ok": False, "error": str(err)}, 500)
+        return context.res.json({"ok": False, "error": str(err) + response.text}, 500)
